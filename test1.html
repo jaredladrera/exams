@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam</title>
+    <style src="style.css"></style>
+    <style>
+
+    #colorBox {
+        width: 100px;
+        height: 100px;
+        background-color: violet;
+        border: 1px solid black;
+    }
+
+    </style>
+</head>
+<body>
+    <div id="colorBox"></div>
+    <p id="colortext"></p>
+    <br>
+    <button onclick="prev()">Prev</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="next()">Next</button>
+    
+</body>
+</html>
+<script>
+    var textColor = document.getElementById('colortext').innerText = 'violet';
+    var container = document.getElementById('colorBox');
+    var colorArr = ['violet', 'yellow', 'blue', 'red', 'green', 'black', 'pink'];
+    var i = 0;
+    const next = () => {
+        i = i + 1;
+        i = i % colorArr.length; 
+        console.log(colorArr[i]);
+        container.style.backgroundColor = colorArr[i]
+        var textColor = document.getElementById('colortext').innerText = colorArr[i];
+    }
+
+    const prev = () => {
+        if (i === 0) {
+        i = colorArr.length; 
+        }
+        i = i - 1; 
+        console.log(colorArr[i]);
+        container.style.backgroundColor = colorArr[i];
+        var textColor = document.getElementById('colortext').innerText = colorArr[i];
+    }
+    
+    const reset = () => {
+        container.style.backgroundColor = colorArr[0];
+        var textColor = document.getElementById('colortext').innerText = 'violet'
+    }
+</script>

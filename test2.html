@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test 2</title>
+</head>
+<body>
+
+    <input type="text" id="input1">
+    <br>
+    <input type="text" id="input2">
+    <br>
+    <input type="text" id="input3">
+    <br>
+    <br>
+    <p id="answer"></p>
+    <p>Old Value</p>
+    <p id="oldvalue"></p>
+
+    <button onclick="totalSum()">GetSum</button>
+    
+</body>
+</html>
+<script>
+    
+    const getSum = (a = null, b = null, c = null) => {
+        var myArr = [a, b, c];
+        var answer = 0;
+        var items;
+
+
+            if (localStorage.getItem("myArr") === null) {
+                localStorage.setItem("myArr", JSON.stringify(myArr));
+                items = JSON.parse(localStorage.getItem("myArr"));
+                console.log("hello");
+                answer = myArr.reduce((a, b) => a + b, 0);
+            } else {
+                items = JSON.parse(localStorage.getItem("myArr"));
+                // var diff = myArr.diff(items);
+                let index  = myArr.findIndex(Number.isNaN)
+                if(index !== -1) {
+                    if(items[index] != null) {
+                        myArr[index] = items[index];
+                        answer = myArr.reduce((a, b) => a + b, 0);
+                        localStorage.setItem("myArr", JSON.stringify(myArr));
+                    } else {
+                        items[index] = 0; // default
+                        myArr[index] = items[index];
+                        answer = myArr.reduce((a, b) => a + b, 0);
+                        localStorage.setItem("myArr", JSON.stringify(myArr));
+                    }
+
+                } else {
+                    answer = myArr.reduce((a, b) => a + b, 0);
+                    localStorage.setItem("myArr", JSON.stringify(myArr));
+                }
+
+
+            }
+            for(var i= 0; i < myArr.length; i++) {
+                document.getElementById("oldvalue").innerHTML += myArr[i];
+            }
+        
+            document.getElementById('answer').innerText = answer;
+    }
+
+    const totalSum = () => {
+        var first = document.getElementById('input1').value;
+        var second = document.getElementById('input2').value;
+        var third = document.getElementById('input3').value;
+
+         getSum(parseInt(first), parseInt(second), parseInt(third));
+    }
+
+</script>

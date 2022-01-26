@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test 5</title>
+    <style>
+        body {
+          font-family: "Lato", sans-serif;
+        }
+        
+        .sidenav {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #111;
+          overflow-x: hidden;
+          transition: 0.5s;
+          padding-top: 60px;
+        }
+        
+        .sidenav a {
+          padding: 8px 8px 8px 32px;
+          text-decoration: none;
+          font-size: 25px;
+          color: #818181;
+          display: block;
+          transition: 0.3s;
+        }
+
+        .sidenav li {
+          padding: 8px 8px 8px 32px;
+          display: block;
+          transition: 0.3s; 
+        }
+
+        .sidenav input {
+          padding: 8px 8px 8px 32px;
+          display: block;
+          transition: 0.3s; 
+        }
+
+        .sidenav p {
+          padding: 8px 8px 8px 32px;
+          display: block;
+          font-size: 25px;
+          color: #818181;
+          transition: 0.3s; 
+        }
+        
+        .sidenav a:hover {
+          color: #f1f1f1;
+        }
+        
+        .sidenav .closebtn {
+          position: absolute;
+          top: 0;
+          right: 25px;
+          font-size: 36px;
+          margin-left: 50px;
+        }
+        
+        @media screen and (max-height: 450px) {
+          .sidenav {padding-top: 15px;}
+          .sidenav a {font-size: 18px;}
+        }
+
+        table {
+        border-collapse: collapse;
+        }
+
+        td, th {
+        border: 1px solid #999;
+        padding: 0.5rem;
+        text-align: left;
+        }
+
+        th {
+            cursor: pointer;
+        }
+        </style>
+</head>
+<body>
+
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <!-- <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a> -->
+        <li><p>Search here:</p>  <input type="text" id="search" onkeyup="searching()"></li>
+      </div>
+      
+      <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
+
+    <center>
+        <table id="productTable">
+          <thead>
+            <tr>
+              <th onclick="sortTable(0)">ID</th>
+              <th onclick="sortTable(1)">Category</th>
+              <th onclick="sortTable(0)">Price</th>
+              <th onclick="sortTable(1)">Rate</th>
+              <th onclick="sortTable(0)">Count</th>
+            </tr>
+          </thead>
+          <tbody id="productsRow">
+
+          </tbody>
+        </table>
+    </center>
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+</body>
+</html>
+
+<script>
+
+
+    (async function() {
+
+    var myArr = [];
+    await fetch('https://fakestoreapi.com/products/').then(response => {
+      return response.json();
+    }).then(data => {
+         myArr = data;
+        
+    }).catch(err => {
+    // Do something for an error here
+    });
+    console.log(myArr);
+    buildTable(myArr);
+
+    })();
+
+     buildTable = (data) => {
+      var table = document.getElementById('productsRow');
+      for(var i=0; i < data.length; i++) {
+        var row = `<tr> 
+          <td>${data[i].id}</td>  
+          <td>${data[i].category}</td>
+          <td>${data[i].price}</td>
+          <td>${data[i].rating.rate}</td>
+          <td>${data[i].rating.count}</td>
+          </tr>`
+        table.innerHTML += row
+      }
+    }
+
+
+
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+
+
+
+function searching() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("search");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("productsRow");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[i];
+    console.log(td);
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("productTable");
+  switching = true;
+
+  dir = "asc"; 
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;      
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
